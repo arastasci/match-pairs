@@ -10,11 +10,14 @@ CONFIG += c++11
 
 SOURCES += \
     card.cpp \
+    game.cpp \
     grid.cpp \
     main.cpp
 
 HEADERS += \
     card.h \
+    game.h \
+    game.h \
     grid.h
 
 # Default rules for deployment.

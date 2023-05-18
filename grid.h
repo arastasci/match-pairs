@@ -11,7 +11,7 @@ public:
     Grid();
 
 public slots:
-    void isComplete();
+    void checkCompleteness();
 };
 
 #endif // GRID_H

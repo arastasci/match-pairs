@@ -5,6 +5,6 @@ Grid::Grid()
 
 }
 
-void Grid::isComplete(){
+void Grid::checkCompleteness(){
 
 }

@@ -10,9 +10,11 @@ class Game
 {
     int try_count = INITIAL_TRY_COUNT;
     std::pair<Card*, Card*> currentPair;
-    Grid* grid;
 public:
+    Grid* grid;
+
     Game();
+    void restart();
     void initialize();
     void disablePair();
     void win();

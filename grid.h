@@ -9,7 +9,7 @@ class Grid : public QGridLayout
     Q_OBJECT
 public:
     Grid();
-
+    ~Grid();
 public slots:
     void checkCompleteness();
 };

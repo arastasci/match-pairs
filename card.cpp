@@ -1,9 +1,18 @@
 #include "card.h"
 const QString unknown_string = "?";
 
+
+Card::Card(){
+
+}
+
 Card::Card(const QString& text,
            QWidget* parent) : QPushButton(unknown_string, parent){
     name = text;
+}
+
+void Card::setName(QString& name){
+    this->name = name;
 }
 
 void Card::disable(){ // succeeds, disable the card.

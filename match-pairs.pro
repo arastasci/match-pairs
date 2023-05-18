@@ -17,7 +17,6 @@ SOURCES += \
 HEADERS += \
     card.h \
     game.h \
-    game.h \
     grid.h
 
 # Default rules for deployment.

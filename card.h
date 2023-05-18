@@ -9,9 +9,11 @@ class Card : public QPushButton{
     Q_OBJECT
     QString name;
 public:
+    Card();
     Card(const QString& text,
          QWidget* parent);
    void disable();
+   void setName(QString& name);
 public slots:
     void reveal();
     void hide();

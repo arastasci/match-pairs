@@ -3,7 +3,7 @@ const QString unknown_string = "?";
 
 
 Card::Card(){
-
+    setText(unknown_string);
 }
 
 Card::Card(const QString& text,

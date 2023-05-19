@@ -66,7 +66,7 @@ void Game::initialize(){
     grid = new Grid;
 
     for(int i = 0; i < 10; i++){
-        for(int j = 0; j < 5; j++){
+        for(int j = 0; j < 10; j++){
             if(grid->itemAtPosition(i, j) != nullptr)
                 continue;
             Card* first_card = new Card;
@@ -76,16 +76,25 @@ void Game::initialize(){
             first_card->setName(words[word_index]);
             second_card->setName(words[word_index]);
 
-            int rand_row;
-            int rand_col;
-            do{
-                rand_row = rand() % 10;
-                rand_col = rand() % 10;
+            int rand_row = rand() % 10;
+            int rand_col = rand() % 10;
+            for(int m = 0; m < 10; m++){
+                bool flag = false;
+                for(int k = 0; k < 10; k++){
+                    if(grid->itemAtPosition((rand_row+m) % 10, (rand_col + k) % 10) == nullptr)
+                    {
+                        rand_row += m;
+                        rand_row += k;
+                        flag = true;
+                        break;
+                    }
+                }
+                if(flag)
+                   break;
             }
-            while( grid->itemAtPosition(rand_row, rand_col) != nullptr || rand_row == i || rand_col == j);
 
             grid->addWidget(first_card, i, j);
-            grid->addWidget(second_card, rand_row, rand_col);
+            grid->addWidget(second_card, rand_row % 10, rand_col % 10);
 
         }
     }

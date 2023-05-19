@@ -152,12 +152,12 @@ void Game::placeCard(Card *c){
 void Game::restart(){
     timer->stop();
     blockAllSignals(true);
-    std::cout << "what" << std::endl;
-    std::cout << grid->count() << std::endl;
+
     for(int i = 0 ; i < WIDTH * HEIGHT; i++){
         QLayoutItem* item = grid->itemAt(0);
-        grid->removeWidget(item->widget());
-        std::cout << grid->count() << std::endl;
+        QWidget* widget = item->widget();
+        grid->removeWidget(widget);
+        delete widget;
     }
     initialize();
 

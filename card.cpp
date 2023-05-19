@@ -39,7 +39,9 @@ void Card::disable(){ // succeeds, disable the card.
     blockSignals(true);
     remove();
 }
-
+void Card::justRevealName(){
+    setText(name);
+}
 void Card::reveal(){
     setText(name);
     QPalette pal = palette();

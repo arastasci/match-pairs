@@ -66,6 +66,7 @@ Game::Game(){
 
     timer = new QTimer(this);
     try_label = new QLabel();
+    score_label = new QLabel();
     new_game_button = new QPushButton("New Game");
     connect(new_game_button, SIGNAL(clicked()), this, SLOT(restart()));
     grid = new Grid;
@@ -75,9 +76,10 @@ void Game::initialize(){
     // fill the grid with cards and connect slots
     selectedCardCount = 0;
     timeCount = 0;
-
+    score = 0;
     try_count = INITIAL_TRY_COUNT;
-    try_label->setText(QString::number(try_count));
+    score_label->setText("Score: " + QString::number(score));
+    try_label->setText("Tries Remaining: " + QString::number(try_count));
 
     remaining_cards = WIDTH * HEIGHT;
 
@@ -169,7 +171,7 @@ void Game::timeToEnable(){
             currentPair[0]->enable();
             currentPair[1]->enable();
             try_count--;
-            try_label->setText(QString::number(try_count));
+            try_label->setText("Tries Remaining: " + QString::number(try_count));
 
             if(try_count == 0)
                 lose();
@@ -178,6 +180,8 @@ void Game::timeToEnable(){
             currentPair[0]->disable();
             currentPair[1]->disable();
             remaining_cards -=2;
+            score++;
+            score_label->setText("Score: " + QString::number(score));
             if(remaining_cards == 0)
                win();
         }
@@ -198,6 +202,10 @@ void Game::revealAllCards(bool isAWin){
     for(int i = 0; i < grid->count(); i++){
 
             Card* c = dynamic_cast<Card*>(grid->itemAt(i)->widget());
+            if(!isAWin){
+                c->setColor(Qt::red);
+            }
+            c->justRevealName();
 
         }
 

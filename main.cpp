@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     w->setWindowTitle("Match Pairs");
     Game* game = new Game;
     game->initialize();
+    hb->addWidget(game->score_label);
     hb->addWidget(game->try_label);
     hb->addWidget(game->new_game_button);
     vb->addLayout(hb);

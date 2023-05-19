@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     QWidget* centralWidget = new QWidget;
     QVBoxLayout* vb = new QVBoxLayout(centralWidget);
     QHBoxLayout* hb = new QHBoxLayout;
-    w->setWindowTitle("YARAX");
+    w->setWindowTitle("Match Pairs");
     Game* game = new Game;
     game->initialize();
     hb->addWidget(game->try_label);

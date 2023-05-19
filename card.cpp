@@ -5,7 +5,6 @@
 Game* Game::singleton;
 
 const QString unknown_string = "?";
-const QString matched_string = "-";
 
 Card::Card(){
     setText(unknown_string);

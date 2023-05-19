@@ -1,6 +1,6 @@
 #include "game.h"
 
-
+#include <iostream>
 
 QString words[] = {
     "apple",
@@ -111,10 +111,7 @@ void Game::initialize(){
                    break;
             }
             QObject::connect(first_card, SIGNAL(clicked()), first_card, SLOT(reveal()));
-            QObject::connect(first_card, SIGNAL(clicked()), grid, SLOT(checkCompleteness()));
-
             QObject::connect(second_card, SIGNAL(clicked()), second_card, SLOT(reveal()));
-            QObject::connect(second_card, SIGNAL(clicked()), grid, SLOT(checkCompleteness()));
 
 
             grid->addWidget(first_card, i, j);
@@ -128,6 +125,10 @@ void Game::disablePair(){
     timer->start(1000);
     blockAllSignals(true);
     success = true;
+    currentPair[0]->setColor(Qt::green);
+    currentPair[1]->setColor(Qt::green);
+    disconnect(currentPair[0], SIGNAL(clicked()), currentPair[0], SLOT(reveal()));
+    disconnect(currentPair[1], SIGNAL(clicked()), currentPair[1], SLOT(reveal()));
 
 }
 bool Game::isPaired(){
@@ -138,6 +139,9 @@ void Game::reenablePair(){
     timer->start(1000);
     blockAllSignals(true);
     success = false;
+    currentPair[0]->setColor(Qt::red);
+    currentPair[1]->setColor(Qt::red);
+
 
 }
 void Game::placeCard(Card *c){
@@ -146,10 +150,12 @@ void Game::placeCard(Card *c){
 void Game::restart(){
     timer->stop();
     blockAllSignals(true);
-
+    std::cout << "what" << std::endl;
+    std::cout << grid->count() << std::endl;
     for(int i = 0 ; i < WIDTH * HEIGHT; i++){
         QLayoutItem* item = grid->itemAt(0);
         grid->removeWidget(item->widget());
+        std::cout << grid->count() << std::endl;
     }
     initialize();
 
@@ -187,12 +193,32 @@ void Game::timeToEnable(){
         timer->stop();
     }
 }
+void Game::revealAllCards(bool isAWin){
 
-void Game::win(){
+    for(int i = 0; i < grid->count(); i++){
+
+            Card* c = dynamic_cast<Card*>(grid->itemAt(i)->widget());
+
+        }
 
 }
-void Game::lose(){
 
+
+void Game::win(){
+    blockAllSignals(true);
+    QMessageBox winBox;
+    revealAllCards(true);
+    winBox.setText("You won!");
+    winBox.setStandardButtons(QMessageBox::Cancel);
+    winBox.exec();
+}
+void Game::lose(){
+    blockAllSignals(true);
+    revealAllCards(false);
+    QMessageBox loseBox;
+    loseBox.setText("You lost...");
+    loseBox.setStandardButtons(QMessageBox::Cancel);
+    loseBox.exec();
 }
 
 void Game::blockAllSignals(bool flag){

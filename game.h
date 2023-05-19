@@ -4,25 +4,27 @@
 #include <card.h>
 #include <grid.h>
 #include <QTimer>
-
+#include <QMessageBox>
 const int INITIAL_TRY_COUNT = 50;
 
 class Game : public QObject
 {
     Q_OBJECT 
-    int try_count = INITIAL_TRY_COUNT;
+    int try_count;
     int timeCount;
     int selectedCardCount;
-    const int WIDTH = 6;
-    const int HEIGHT = 5;
+    int remaining_cards;
+    const int WIDTH = 2;
+    const int HEIGHT = 3;
 public:
     static Game* singleton;
     bool success;
     Card* currentPair[2];
     Grid* grid;
     QTimer* timer;
+    QLabel* try_label;
+    QPushButton* new_game_button;
     Game();
-    void restart();
     void initialize();
     void reenablePair();
     void disablePair();
@@ -33,6 +35,8 @@ public:
     void blockAllSignals(bool flag);
 public slots:
     void timeToEnable();
+    void restart();
+
 };
 
 #endif // GAME_H

@@ -61,15 +61,26 @@ QString words[] = {
 
 Game::Game(){
     singleton = this;
-    selectedCardCount = 0;
-    timeCount = 0;
-    timer = new QTimer(this);
 
+
+
+    timer = new QTimer(this);
+    try_label = new QLabel();
+    new_game_button = new QPushButton("New Game");
+    connect(new_game_button, SIGNAL(clicked()), this, SLOT(restart()));
+    grid = new Grid;
 }
 
 void Game::initialize(){
     // fill the grid with cards and connect slots
-    grid = new Grid;
+    selectedCardCount = 0;
+    timeCount = 0;
+
+    try_count = INITIAL_TRY_COUNT;
+    try_label->setText(QString::number(try_count));
+
+    remaining_cards = WIDTH * HEIGHT;
+
 
     for(int i = 0; i < WIDTH; i++){
         for(int j = 0; j < HEIGHT; j++){
@@ -87,10 +98,11 @@ void Game::initialize(){
             for(int m = 0; m < WIDTH; m++){
                 bool flag = false;
                 for(int k = 0; k < HEIGHT; k++){
-                    if(grid->itemAtPosition((rand_row+m) % WIDTH, (rand_col + k) % HEIGHT) == nullptr)
+                    if(grid->itemAtPosition((rand_row+m) % WIDTH, (rand_col + k) % HEIGHT) == nullptr
+                            && i != rand_row + m && j != rand_col + k)
                     {
                         rand_row += m;
-                        rand_row += k;
+                        rand_col += k;
                         flag = true;
                         break;
                     }
@@ -132,8 +144,16 @@ void Game::placeCard(Card *c){
     currentPair[selectedCardCount++] = c;
 }
 void Game::restart(){
-    delete grid;
+    timer->stop();
+    blockAllSignals(true);
+
+    for(int i = 0 ; i < WIDTH * HEIGHT; i++){
+        QLayoutItem* item = grid->itemAt(0);
+        grid->removeWidget(item->widget());
+    }
     initialize();
+
+    blockAllSignals(false);
 }
 
 void Game::timeToEnable(){
@@ -142,10 +162,18 @@ void Game::timeToEnable(){
         if(!success){
             currentPair[0]->enable();
             currentPair[1]->enable();
+            try_count--;
+            try_label->setText(QString::number(try_count));
+
+            if(try_count == 0)
+                lose();
         }
         else{
             currentPair[0]->disable();
             currentPair[1]->disable();
+            remaining_cards -=2;
+            if(remaining_cards == 0)
+               win();
         }
 
         currentPair[0] = nullptr;
@@ -156,6 +184,7 @@ void Game::timeToEnable(){
 
         timeCount = 0;
         selectedCardCount = 0;
+        timer->stop();
     }
 }
 

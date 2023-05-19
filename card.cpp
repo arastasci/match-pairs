@@ -14,7 +14,7 @@ Card::Card(){
 Card::Card(const QString& text,
            QWidget* parent) : QPushButton(unknown_string, parent){
     QPalette pal = palette();
-    pal.setColor(QPalette::Button, QColor(Qt::gray));
+    pal.setColor(QPalette::Button, QColor(Qt::white));
     setPalette(pal);
     name = text;
 }
@@ -49,7 +49,7 @@ void Card::reveal(){
     blockSignals(true);
     Game::singleton->placeCard(this);
     if(Game::singleton->isPaired()){
-        if(Game::singleton->currentPair[0]->name == Game::singleton->currentPair[1]->name){
+        if(QString::compare(Game::singleton->currentPair[0]->name, Game::singleton->currentPair[1]->name) == 0){
             Game::singleton->disablePair();
         }
         else{

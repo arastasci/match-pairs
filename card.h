@@ -5,19 +5,26 @@
 #include <QPushButton>
 #include <QString>
 #include <QPalette>
+
+class Game;
 class Card : public QPushButton{
     Q_OBJECT
-    QString name;
 public:
+    QString name;
+
+
     Card();
     Card(const QString& text,
          QWidget* parent);
    void disable();
+   void enable();
+   void setColor(QColor color);
    void setName(QString& name);
+   void remove();
+   void hide();
+
 public slots:
     void reveal();
-    void hide();
-
 };
 
 

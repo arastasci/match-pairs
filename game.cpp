@@ -101,7 +101,7 @@ void Game::initialize(){
                 bool flag = false;
                 for(int k = 0; k < HEIGHT; k++){
                     if(grid->itemAtPosition((rand_row+m) % WIDTH, (rand_col + k) % HEIGHT) == nullptr
-                            && i != rand_row + m && j != rand_col + k)
+                            && !(i == (rand_row + m) % WIDTH && j == (rand_col + k) % HEIGHT))
                     {
                         rand_row += m;
                         rand_col += k;
@@ -112,16 +112,16 @@ void Game::initialize(){
                 if(flag)
                    break;
             }
+
             QObject::connect(first_card, SIGNAL(clicked()), first_card, SLOT(reveal()));
             QObject::connect(second_card, SIGNAL(clicked()), second_card, SLOT(reveal()));
-
-
             grid->addWidget(first_card, i, j);
             grid->addWidget(second_card, rand_row % WIDTH, rand_col % HEIGHT);
 
         }
     }
 }
+
 void Game::disablePair(){
     connect(timer, SIGNAL(timeout()), this, SLOT(timeToEnable()));
     timer->start(1000);
@@ -133,9 +133,11 @@ void Game::disablePair(){
     disconnect(currentPair[1], SIGNAL(clicked()), currentPair[1], SLOT(reveal()));
 
 }
+
 bool Game::isPaired(){
     return selectedCardCount == 2;
 }
+
 void Game::reenablePair(){
     connect(timer, SIGNAL(timeout()), this, SLOT(timeToEnable()));
     timer->start(1000);
@@ -146,11 +148,14 @@ void Game::reenablePair(){
 
 
 }
+
 void Game::placeCard(Card *c){
     currentPair[selectedCardCount++] = c;
 }
+
 void Game::restart(){
     timer->stop();
+    disconnect(timer, SIGNAL(timeout()), this, SLOT(timeToEnable()));
     blockAllSignals(true);
 
     for(int i = 0 ; i < WIDTH * HEIGHT; i++){
@@ -201,19 +206,17 @@ void Game::revealAllCards(bool isAWin){
 
     for(int i = 0; i < grid->count(); i++){
 
-            Card* c = dynamic_cast<Card*>(grid->itemAt(i)->widget());
-            if(!isAWin){
-                c->setColor(Qt::red);
-            }
-            c->justRevealName();
-
+        Card* c = dynamic_cast<Card*>(grid->itemAt(i)->widget());
+        if(!isAWin){
+            c->setColor(Qt::red);
         }
-
+        c->justRevealName();
+    }
 }
 
 
 void Game::win(){
-    blockAllSignals(true);
+    disconnectAll();
     QMessageBox winBox;
     revealAllCards(true);
     winBox.setText("You won!");
@@ -221,7 +224,7 @@ void Game::win(){
     winBox.exec();
 }
 void Game::lose(){
-    blockAllSignals(true);
+    disconnectAll();
     revealAllCards(false);
     QMessageBox loseBox;
     loseBox.setText("You lost...");
@@ -230,11 +233,17 @@ void Game::lose(){
 }
 
 void Game::blockAllSignals(bool flag){
-    for(int i = 0; i < grid->count(); i++){
-        Card* c = qobject_cast<Card*>(grid->itemAt(i)->widget());
+    for(int i = 0; i < WIDTH * HEIGHT; i++){
+        Card* c = dynamic_cast<Card*>(grid->itemAt(i)->widget());
         c->blockSignals(flag);
     }
-    grid->blockSignals(flag);
+}
+
+void Game::disconnectAll(){
+    for(int i = 0; i < WIDTH * HEIGHT; i++){
+        Card* c = dynamic_cast<Card*>(grid->itemAt(i)->widget());
+        disconnect(c, SIGNAL(clicked()), c, SLOT(reveal()));
+    }
 }
 
 

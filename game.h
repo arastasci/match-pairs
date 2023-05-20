@@ -5,7 +5,7 @@
 #include <grid.h>
 #include <QTimer>
 #include <QMessageBox>
-const int INITIAL_TRY_COUNT = 10;
+const int INITIAL_TRY_COUNT = 5;
 
 class Game : public QObject
 {
@@ -15,8 +15,8 @@ class Game : public QObject
     int score;
     int selectedCardCount;
     int remaining_cards;
-    const int WIDTH = 4;
-    const int HEIGHT = 5;
+    const int WIDTH = 3;
+    const int HEIGHT = 4;
 public:
     static Game* singleton;
     bool success;
@@ -35,6 +35,7 @@ public:
     void win();
     void lose();
     void blockAllSignals(bool flag);
+    void disconnectAll();
     void revealAllCards(bool isAWin);
 public slots:
     void timeToEnable();

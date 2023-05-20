@@ -8,13 +8,12 @@ const QString unknown_string = "?";
 
 Card::Card(){
     setText(unknown_string);
+    setColor(Qt::white);
 }
 
 Card::Card(const QString& text,
            QWidget* parent) : QPushButton(unknown_string, parent){
-    QPalette pal = palette();
-    pal.setColor(QPalette::Button, QColor(Qt::white));
-    setPalette(pal);
+    setColor(Qt::white);
     name = text;
 }
 
@@ -44,9 +43,7 @@ void Card::justRevealName(){
 }
 void Card::reveal(){
     setText(name);
-    QPalette pal = palette();
-    pal.setColor(QPalette::Button, QColor(Qt::blue));
-    setPalette(pal);
+    setColor(Qt::blue);
     blockSignals(true);
     Game::singleton->placeCard(this);
     if(Game::singleton->isPaired()){

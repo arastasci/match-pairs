@@ -29,13 +29,11 @@ void Card::setColor(QColor color){
 
 void Card::enable(){
     setColor(Qt::white);
-    blockSignals(false);
     hide();
 }
 
 void Card::disable(){ // succeeds, disable the card.
     setColor(Qt::green);
-    blockSignals(true);
     remove();
 }
 void Card::justRevealName(){
@@ -58,7 +56,6 @@ void Card::reveal(){
 
 void Card::hide(){
     setText(unknown_string);
-    blockSignals(false);
 }
 
 void Card::remove(){

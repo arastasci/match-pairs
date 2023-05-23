@@ -61,15 +61,12 @@ QString words[] = {
 
 Game::Game(){
     singleton = this;
-
-
-
     timer = new QTimer(this);
     try_label = new QLabel();
     score_label = new QLabel();
     new_game_button = new QPushButton("New Game");
     connect(new_game_button, SIGNAL(clicked()), this, SLOT(restart()));
-    grid = new Grid;
+    grid = new QGridLayout;
 }
 
 void Game::initialize(){
@@ -131,7 +128,6 @@ void Game::disablePair(){
     currentPair[1]->setColor(Qt::green);
     disconnect(currentPair[0], SIGNAL(clicked()), currentPair[0], SLOT(reveal()));
     disconnect(currentPair[1], SIGNAL(clicked()), currentPair[1], SLOT(reveal()));
-
 }
 
 bool Game::isPaired(){
@@ -175,11 +171,7 @@ void Game::timeToEnable(){
         if(!success){
             currentPair[0]->enable();
             currentPair[1]->enable();
-            try_count--;
-            try_label->setText("Tries Remaining: " + QString::number(try_count));
 
-            if(try_count == 0)
-                lose();
         }
         else{
             currentPair[0]->disable();
@@ -187,10 +179,16 @@ void Game::timeToEnable(){
             remaining_cards -=2;
             score++;
             score_label->setText("Score: " + QString::number(score));
-            if(remaining_cards == 0)
-               win();
+            
         }
 
+        try_count--;
+        try_label->setText("Tries Remaining: " + QString::number(try_count));
+
+        if(remaining_cards == 0)
+               win();
+        else if(try_count == 0)
+                lose();
         currentPair[0] = nullptr;
         currentPair[1] = nullptr;
 
@@ -219,16 +217,16 @@ void Game::win(){
     disconnectAll();
     QMessageBox winBox;
     revealAllCards(true);
-    winBox.setText("You won!");
-    winBox.setStandardButtons(QMessageBox::Cancel);
+    winBox.setText("You won!\nScore: " + QString::number(score));
+    winBox.setStandardButtons(QMessageBox::Ok);
     winBox.exec();
 }
 void Game::lose(){
     disconnectAll();
     revealAllCards(false);
     QMessageBox loseBox;
-    loseBox.setText("You lost...");
-    loseBox.setStandardButtons(QMessageBox::Cancel);
+    loseBox.setText("You lost...\nScore: " + QString::number(score));
+    loseBox.setStandardButtons(QMessageBox::Ok);
     loseBox.exec();
 }
 
@@ -245,6 +243,7 @@ void Game::disconnectAll(){
         disconnect(c, SIGNAL(clicked()), c, SLOT(reveal()));
     }
 }
+
 
 
 

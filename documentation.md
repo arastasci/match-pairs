@@ -15,14 +15,9 @@ To start the program, the user must first compile the program. As it is a Qt app
 
 # Implementation Details
 
-## Grid.cpp
-
-`Grid` is a class that inherits from `QGridLayout` and is used to create a grid layout for a graphical user interface. It also has a method `checkCompleteness()` which is currently empty and can be used to check if the grid is complete. Additionally, it has a destructor that
-deletes all the widgets in the grid.
-
 ## Card.cpp
 
-We implemented Card objects which implements from QPushButton which makes them interactable. Card object has a few functions which are used in the 
+We implemented Card objects which implements from QPushButton which makes them interactable. Card object has a few functions which are used in the
 Game class. The functions are:
 
 setName: Sets the name of the card object. The name is used to compare the cards.
@@ -44,16 +39,16 @@ remove: This function is used to remove the card object. It is used in the disab
 ## Game.cpp
 
 Game.cpp is the main class of the program. It is responsible for the game logic and the GUI. In the constructor we create the necessary Qt objects
-like the timer, score and try label, new game button and the grid layout. We also declare the words that will be used in the game. 
+like the timer, score and try label, new game button and the grid layout. We also declare the words that will be used in the game.
 
 The class has a few functions which are:
 
-initialize: This function initializes the game with the initial values like score and try times. While looping through the board, it sets random card objects to the random locations after assuring they are empty. 
+initialize: This function initializes the game with the initial values like score and try times. While looping through the board, it sets random card objects to the random locations after assuring they are empty.
 
 isPaired: This function checks if the cards are paired. It is used in the reveal function of the Card class.
 
 disablePair: This function disables the pair of cards by blocking all signals and setting their color green for 1 second. It then disconnects the Card objects to assure they are not interactable again in that round. It is used in the reveal function of the Card class if the cards in the pair are the same.
- 
+
 reenablePair: This function reenables the pair of cards by blocking all signals and setting their color red for 1 second. The cards' color turns to blue again which means they are interactable again. It is used in the reveal function of the Card class if the cards in the pair are not the same.
 
 placeCard: This function is used to place the card in an array of two named currentPair which stores the pair. This array is used in the reveal function of the Card class to be able to reach both cards' objects.
@@ -63,7 +58,7 @@ restart: This function is used to restart the game. It is connected to the new g
 timeToEnable: This function is a slot function that is called when the timer times out. It is responsible for enabling the cards that were previously disabled after a failed attempt to match two cards. If the two cards were successfully matched, it disables them and
 updates the score. If all cards have been matched, it calls the `win` function. If the player has used up all their tries, it calls the `lose` function.
 
-win:  This function is called when the player has successfully matched all the cards in the game. It disconnects all the signals from the cards, reveals all the cards, and displays a message box with the text "You won!". It sets a 'cancel' button. If the player clicks on the 'cancel' button, the program exits.
+win: This function is called when the player has successfully matched all the cards in the game. It disconnects all the signals from the cards, reveals all the cards, and displays a message box with the text "You won!". It sets a 'cancel' button. If the player clicks on the 'cancel' button, the program exits.
 
 lose: This function which is called when the player has used up all their tries and has lost the game. It disconnects all signals from the cards, reveals all the cards, and displays a message box with the text "You lost...". It sets a 'cancel' button. If the player clicks on the 'cancel' button, the program exits.
 
@@ -71,14 +66,13 @@ revealAllCards: This is a function that reveals all the cards in the game. It ta
 parameter `isAWin` which determines the color of the revealed cards. If `isAWin` is true,
 the cards are revealed in green color, otherwise they are revealed in red color.
 
-blockAllSignals:  This function takes a boolean flag as input. It loops through all the cards in the grid and calls the `blockSignals` function on each card, passing in the flag as an argument. If the flag is true, this will block all signals emitted by the card, effectively disabling it. If the flag is false, this will unblock all signals emitted by the card, effectively enabling it. This function is used to disable or enable all the cards in the grid at once, depending on the state of the game.
+blockAllSignals: This function takes a boolean flag as input. It loops through all the cards in the grid and calls the `blockSignals` function on each card, passing in the flag as an argument. If the flag is true, this will block all signals emitted by the card, effectively disabling it. If the flag is false, this will unblock all signals emitted by the card, effectively enabling it. This function is used to disable or enable all the cards in the grid at once, depending on the state of the game.
 
 disconnectAll: It disconnects all signals from the cards in the grid by iterating through all the cards in the grid and calling the `disconnect` function on each card, passing in the `clicked` signal and the `reveal` slot as arguments. This ensures that no further signals will be emitted from the cards and that their slots will not be called.
 
 ## main.cpp
 
 The `main` function is the entry point of the program. It creates a `QApplication` object, a `QMainWindow` object, and a `QWidget` object. It sets the title of the main window to "MatchPairs". It creates a `Game` object and initializes it. It creates a `QVBoxLayout` object and a `QHBoxLayout` object, and adds the score label, try label, and new game button to the horizontal layout. It adds the horizontal layout and the grid layout of the `Game` object to the vertical layout. It sets the central widget of the main window to the vertical layout, and shows the main window. Finally, it starts the event loop by calling `a.exec()`.
-
 
 # Program Execution (Gameplay)
 

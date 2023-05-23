@@ -11,13 +11,12 @@ CONFIG += c++11
 SOURCES += \
     card.cpp \
     game.cpp \
-    grid.cpp \
     main.cpp
 
 HEADERS += \
     card.h \
     game.h \
-    grid.h
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -58,7 +58,7 @@ QString words[] = {
 };
 
 
-
+// constructor
 Game::Game(){
     singleton = this;
     timer = new QTimer(this);
@@ -69,6 +69,7 @@ Game::Game(){
     grid = new QGridLayout;
 }
 
+// initializes the grid with the given constants
 void Game::initialize(){
     // fill the grid with cards and connect slots
     selectedCardCount = 0;
@@ -119,6 +120,7 @@ void Game::initialize(){
     }
 }
 
+// disables the currentPair cards for they are now successfully matched
 void Game::disablePair(){
     connect(timer, SIGNAL(timeout()), this, SLOT(timeToEnable()));
     timer->start(1000);
@@ -130,10 +132,12 @@ void Game::disablePair(){
     disconnect(currentPair[1], SIGNAL(clicked()), currentPair[1], SLOT(reveal()));
 }
 
+// self-explanatory
 bool Game::isPaired(){
     return selectedCardCount == 2;
 }
 
+// reenables the pair as they are not successfully matched
 void Game::reenablePair(){
     connect(timer, SIGNAL(timeout()), this, SLOT(timeToEnable()));
     timer->start(1000);
@@ -145,10 +149,12 @@ void Game::reenablePair(){
 
 }
 
+
 void Game::placeCard(Card *c){
     currentPair[selectedCardCount++] = c;
 }
 
+// gets invoked when new_game_button is pressed. Reinitializes the game after resetting all the conditions.
 void Game::restart(){
     timer->stop();
     disconnect(timer, SIGNAL(timeout()), this, SLOT(timeToEnable()));
@@ -165,6 +171,8 @@ void Game::restart(){
     blockAllSignals(false);
 }
 
+// gets invoked by the timer. gets invoked after exactly a second after the currentPair is matched. 
+// this disconnects and stops the timer after deciding the behaviours of pairs.
 void Game::timeToEnable(){
     timeCount++;
     if(timeCount >= 1){
@@ -200,6 +208,8 @@ void Game::timeToEnable(){
         timer->stop();
     }
 }
+
+// gets called after the game ends, the method name explains it all.
 void Game::revealAllCards(bool isAWin){
 
     for(int i = 0; i < grid->count(); i++){

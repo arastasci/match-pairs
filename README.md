@@ -13,9 +13,30 @@ This documentation aims to provide a description of the program and its implemen
 
 To start the program, the user must first compile the program. As it is a Qt application, the user can run `qmake` at the root of the source code to create a Makefile. Then, running `make` at the root creates an executable `match-pairs` which can be run with the command `./match-pairs` which starts the program.
 
-# Implementation Details
+# Program Execution
 
-## Card.cpp
+## Gameplay
+
+As explained in the `Introduction` section, the program is a match pairs game. The cards contain words which are initially not known by the player and the player chooses to reveal pairs of cards in order to match them. The player must match them in a given amount of tries.
+
+## User Interface
+
+The user interface consists of clickable buttons and labels. There is a "New Game" button that ends the current game and starts a new one upon being clicked. The labels indicate the score and the number of moves left. These three components horizontally claim the first third of the GUI. Below them are the cards that are initially marked with '?'. These cards get 'flipped' upon being clicked, that is, they reveal the noun the card contains. The colors of the cards change based on the state of flipping cards and the success of the pairing: blue for the first flipped card, green/yellow (depending on the colorblind mode) for a successful match and red for an unsuccessful match.
+Examples with screenshots can be seen in the `Examples` section.
+
+# Program Structure
+
+## Overview
+
+The program has event-driven programming at the core of its structure. Qt allows the developer to create slots (event handlers) for signals (events) coming from specialized `QObjects`.
+
+In our code, we kept it as simple as possible. The OOP implementation complies with the SOLID principles and the classes are explained in detail in the `Implementation Details` section.
+
+We have also used a design pattern that is very common especially in the game development world: Singleton. A singleton is basically an instance of a class that is globally accessable via its class name. The reason we went for this pattern is that there are no static classes in C++ and we needed to reach the instance of the class from within a function which has no access to it. This pattern was used for an instance of a `Game` class, one can find the implementation of it in the source code.
+
+## Implementation Details
+
+### Card.cpp
 
 We implemented Card objects which implements from QPushButton which makes them interactable. Card object has a few functions which are used in the
 Game class. The functions are:
@@ -36,7 +57,7 @@ hide: This function is used to hide the card object. It puts '?' on the card obj
 
 remove: This function is used to remove the card object. It is used in the disable function to delete the name of the cards after successfully matching the pair.
 
-## Game.cpp
+### Game.cpp
 
 Game.cpp is the main class of the program. It is responsible for the game logic and the GUI. In the constructor we create the necessary Qt objects
 like the timer, score and try label, new game button and the grid layout. We also declare the words that will be used in the game.
@@ -70,14 +91,34 @@ blockAllSignals: This function takes a boolean flag as input. It loops through a
 
 disconnectAll: It disconnects all signals from the cards in the grid by iterating through all the cards in the grid and calling the `disconnect` function on each card, passing in the `clicked` signal and the `reveal` slot as arguments. This ensures that no further signals will be emitted from the cards and that their slots will not be called.
 
-## main.cpp
+### main.cpp
 
 The `main` function is the entry point of the program. It creates a `QApplication` object, a `QMainWindow` object, and a `QWidget` object. It sets the title of the main window to "MatchPairs". It creates a `Game` object and initializes it. It creates a `QVBoxLayout` object and a `QHBoxLayout` object, and adds the score label, try label, and new game button to the horizontal layout. It adds the horizontal layout and the grid layout of the `Game` object to the vertical layout. It sets the central widget of the main window to the vertical layout, and shows the main window. Finally, it starts the event loop by calling `a.exec()`.
 
-# Program Execution (Gameplay)
+# Examples (Screenshots)
 
-As explained in the `Introduction` section, the program is a match pairs game. The cards contain words which are initially not known by the player and the player chooses to reveal pairs of cards in order to match them. The player must match them in a given amount of tries.
+This is how it looks when you first start the game:
 
-Source:
+This is how it looks when you select a single card:
+
+This is how it looks when you cannot remember where the other card is:
+
+This is how it looks when you finally remember it after 5 tries (miserable):
+
+This is how it feels to be a disappointment:
+
+This is how it feels to chew 5 gum:
+
+# Improvements
+
+One improvement that can be made in the GUI of the program is having a colorblind mode. When we made one of our friends who is colorblind, she couldn't distinguish the difference between the failed matches and the previously succeeded ones, which are fine as she can still read the nouns but it still took away the joy of the gameplay. We actually created a version which has a colorblind button that turns the success color from green to yellow upon being clicked but have decided not to publish it, fearing stability issues.
+
+# Conclusion
+
+Event-driven programming paradigm that the Qt framework adopts is not only mandatory for GUI programming but also generally a good practice of writing code. Event-driven programming behaviours like events and event handlers present the coder the gift to write clean and scalable code, and we have surely taken benefit from it.
+
+# Appendix
+
+## Source
 
 [1] https://en.wikipedia.org/wiki/Event-driven_programming

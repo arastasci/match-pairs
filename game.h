@@ -2,9 +2,9 @@
 #define GAME_H
 #include <utility>
 #include <card.h>
-#include <grid.h>
 #include <QTimer>
 #include <QMessageBox>
+#include <QGridLayout>
 const int INITIAL_TRY_COUNT = 50;
 
 class Game : public QObject
@@ -21,7 +21,7 @@ public:
     static Game* singleton;
     bool success;
     Card* currentPair[2];
-    Grid* grid;
+    QGridLayout* grid;
     QTimer* timer;
     QLabel* try_label;
     QLabel* score_label;

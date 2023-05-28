@@ -20,7 +20,6 @@ public:
    void enable();
    void setColor(QColor color);
    void setName(QString& name);
-   void remove();
    void justRevealName();
    void hide();
 

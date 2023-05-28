@@ -58,20 +58,18 @@ QString words[] = {
 };
 
 
-
+// constructor
 Game::Game(){
     singleton = this;
-
-
-
     timer = new QTimer(this);
     try_label = new QLabel();
     score_label = new QLabel();
     new_game_button = new QPushButton("New Game");
     connect(new_game_button, SIGNAL(clicked()), this, SLOT(restart()));
-    grid = new Grid;
+    grid = new QGridLayout;
 }
 
+// initializes the grid with the given constants
 void Game::initialize(){
     // fill the grid with cards and connect slots
     selectedCardCount = 0;
@@ -122,6 +120,7 @@ void Game::initialize(){
     }
 }
 
+// disables the currentPair cards for they are now successfully matched
 void Game::disablePair(){
     connect(timer, SIGNAL(timeout()), this, SLOT(timeToEnable()));
     timer->start(1000);
@@ -131,13 +130,14 @@ void Game::disablePair(){
     currentPair[1]->setColor(Qt::green);
     disconnect(currentPair[0], SIGNAL(clicked()), currentPair[0], SLOT(reveal()));
     disconnect(currentPair[1], SIGNAL(clicked()), currentPair[1], SLOT(reveal()));
-
 }
 
+// self-explanatory
 bool Game::isPaired(){
     return selectedCardCount == 2;
 }
 
+// reenables the pair as they are not successfully matched
 void Game::reenablePair(){
     connect(timer, SIGNAL(timeout()), this, SLOT(timeToEnable()));
     timer->start(1000);
@@ -149,10 +149,12 @@ void Game::reenablePair(){
 
 }
 
+
 void Game::placeCard(Card *c){
     currentPair[selectedCardCount++] = c;
 }
 
+// gets invoked when new_game_button is pressed. Reinitializes the game after resetting all the conditions.
 void Game::restart(){
     timer->stop();
     disconnect(timer, SIGNAL(timeout()), this, SLOT(timeToEnable()));
@@ -169,17 +171,15 @@ void Game::restart(){
     blockAllSignals(false);
 }
 
+// gets invoked by the timer. gets invoked after exactly a second after the currentPair is matched. 
+// this disconnects and stops the timer after deciding the behaviours of pairs.
 void Game::timeToEnable(){
     timeCount++;
     if(timeCount >= 1){
         if(!success){
             currentPair[0]->enable();
             currentPair[1]->enable();
-            try_count--;
-            try_label->setText("Tries Remaining: " + QString::number(try_count));
 
-            if(try_count == 0)
-                lose();
         }
         else{
             currentPair[0]->disable();
@@ -187,10 +187,16 @@ void Game::timeToEnable(){
             remaining_cards -=2;
             score++;
             score_label->setText("Score: " + QString::number(score));
-            if(remaining_cards == 0)
-               win();
+            
         }
 
+        try_count--;
+        try_label->setText("Tries Remaining: " + QString::number(try_count));
+
+        if(remaining_cards == 0)
+               win();
+        else if(try_count == 0)
+                lose();
         currentPair[0] = nullptr;
         currentPair[1] = nullptr;
 
@@ -202,6 +208,8 @@ void Game::timeToEnable(){
         timer->stop();
     }
 }
+
+// gets called after the game ends, the method name explains it all.
 void Game::revealAllCards(bool isAWin){
 
     for(int i = 0; i < grid->count(); i++){
@@ -219,16 +227,16 @@ void Game::win(){
     disconnectAll();
     QMessageBox winBox;
     revealAllCards(true);
-    winBox.setText("You won!");
-    winBox.setStandardButtons(QMessageBox::Cancel);
+    winBox.setText("You won!\nScore: " + QString::number(score));
+    winBox.setStandardButtons(QMessageBox::Ok);
     winBox.exec();
 }
 void Game::lose(){
     disconnectAll();
     revealAllCards(false);
     QMessageBox loseBox;
-    loseBox.setText("You lost...");
-    loseBox.setStandardButtons(QMessageBox::Cancel);
+    loseBox.setText("You lost...\nScore: " + QString::number(score));
+    loseBox.setStandardButtons(QMessageBox::Ok);
     loseBox.exec();
 }
 
@@ -245,6 +253,7 @@ void Game::disconnectAll(){
         disconnect(c, SIGNAL(clicked()), c, SLOT(reveal()));
     }
 }
+
 
 
 

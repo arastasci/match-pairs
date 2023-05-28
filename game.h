@@ -1,10 +1,12 @@
 #ifndef GAME_H
 #define GAME_H
+
 #include <utility>
 #include <card.h>
 #include <QTimer>
 #include <QMessageBox>
 #include <QGridLayout>
+
 const int INITIAL_TRY_COUNT = 50;
 
 class Game : public QObject

@@ -20,6 +20,7 @@ Card::Card(const QString& text,
 void Card::setName(QString& name){
     this->name = name;
 }
+
 // boilerplate code for setting the color.
 void Card::setColor(QColor color){
     QPalette pal = palette(); 

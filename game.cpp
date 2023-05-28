@@ -145,8 +145,6 @@ void Game::reenablePair(){
     success = false;
     currentPair[0]->setColor(Qt::red);
     currentPair[1]->setColor(Qt::red);
-
-
 }
 
 

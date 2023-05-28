@@ -7,6 +7,7 @@
 #include <QPalette>
 
 class Game;
+
 class Card : public QPushButton{
     Q_OBJECT
 public:
